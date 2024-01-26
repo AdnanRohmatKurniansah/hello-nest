@@ -1,5 +1,6 @@
-import { Controller, Get, Param, Post, Req, Res } from '@nestjs/common';
-import { Request, Response } from 'express';
+import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
+import { Response } from 'express';
+import { CreateProductDto } from './dto/create-product.dto';
 
 // eslint-disable-next-line prefer-const
 let products = [
@@ -33,9 +34,9 @@ export class ProductController {
   }
 
   @Post()
-  store(@Req() req: Request, @Res() res: Response) {
+  store(@Body() createProductDto: CreateProductDto, @Res() res: Response) {
     try {
-      const { id, name, price, desc } = req.body;
+      const { id, name, price, desc } = createProductDto;
       products.push({
         id,
         name,
