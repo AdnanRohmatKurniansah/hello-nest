@@ -1,6 +1,16 @@
-import { Body, Controller, Get, Param, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+  Res,
+} from '@nestjs/common';
 import { Response } from 'express';
 import { CreateProductDto } from './dto/create-product.dto';
+import { UpdateProductDto } from './dto/update-product.dto';
 
 // eslint-disable-next-line prefer-const
 let products = [
@@ -55,12 +65,55 @@ export class ProductController {
   }
 
   @Get(':id')
-  show(@Param('id') id: string, @Res() res: Response) {
+  show(@Param('id') id: number, @Res() res: Response) {
     try {
-      const productId = parseInt(id, 10);
-      const product = products.find((p) => p.id === productId);
+      const product = products.filter((p) => {
+        return p.id === id;
+      });
       res.json({
         message: 'Detail product',
+        data: product,
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: error,
+      });
+    }
+  }
+
+  @Put('update/:id')
+  update(
+    @Param('id') id: number,
+    @Body() updateProductDto: UpdateProductDto,
+    @Res() res: Response,
+  ) {
+    try {
+      products.filter((p) => {
+        if (p.id == id) {
+          p.name = updateProductDto.name;
+          p.price = updateProductDto.price;
+          p.desc = updateProductDto.desc;
+        }
+      });
+      res.json({
+        message: 'Successfully updated product',
+        data: products,
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: error,
+      });
+    }
+  }
+
+  @Delete(':id')
+  destroy(@Param('id') id: number, @Res() res: Response) {
+    try {
+      const product = products.filter((p) => {
+        return p.id != id;
+      });
+      res.json({
+        message: 'Successfully deleted product',
         data: product,
       });
     } catch (error) {
