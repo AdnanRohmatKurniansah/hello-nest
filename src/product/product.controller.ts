@@ -11,28 +11,16 @@ import {
 import { Response } from 'express';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-
-// eslint-disable-next-line prefer-const
-let products = [
-  {
-    id: 1,
-    name: 'oreo',
-    price: 3000,
-    desc: 'asdxsadaca',
-  },
-  {
-    id: 2,
-    name: 'wafer',
-    price: 1000,
-    desc: 'asdxsadaca',
-  },
-];
+import { ProductsService } from './product.service';
 
 @Controller('product')
 //prefix
 export class ProductController {
+  constructor(private productService: ProductsService) {}
+
   @Get()
-  findAll(@Res() res: Response) {
+  async index(@Res() res: Response) {
+    const products = this.productService.findAll();
     res.json({
       data: products,
     });
@@ -46,6 +34,7 @@ export class ProductController {
   @Post()
   store(@Body() createProductDto: CreateProductDto, @Res() res: Response) {
     try {
+      const products = this.productService.findAll();
       const { id, name, price, desc } = createProductDto;
       products.push({
         id,
@@ -67,6 +56,7 @@ export class ProductController {
   @Get(':id')
   show(@Param('id') id: number, @Res() res: Response) {
     try {
+      const products = this.productService.findAll();
       const product = products.filter((p) => {
         return p.id === id;
       });
@@ -88,6 +78,7 @@ export class ProductController {
     @Res() res: Response,
   ) {
     try {
+      const products = this.productService.findAll();
       products.filter((p) => {
         if (p.id == id) {
           p.name = updateProductDto.name;
@@ -109,6 +100,7 @@ export class ProductController {
   @Delete(':id')
   destroy(@Param('id') id: number, @Res() res: Response) {
     try {
+      const products = this.productService.findAll();
       const product = products.filter((p) => {
         return p.id != id;
       });
