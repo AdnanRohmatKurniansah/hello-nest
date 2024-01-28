@@ -5,6 +5,9 @@
 # Envirountment
 .env
 
+# Prisma migrations
+prisma/migrations
+
 # Logs
 logs
 *.log
