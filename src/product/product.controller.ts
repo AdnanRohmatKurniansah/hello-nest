@@ -7,11 +7,14 @@ import {
   Post,
   Put,
   Res,
+  UploadedFile,
+  UseInterceptors,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductsService } from './product.service';
+import { FileInterceptor } from '@nestjs/platform-express';
 
 @Controller('product')
 //prefix
@@ -113,5 +116,13 @@ export class ProductController {
         message: error,
       });
     }
+  }
+
+  @UseInterceptors(FileInterceptor('file'))
+  @Post('upload')
+  upload(@UploadedFile() file: Express.Multer.File) {
+    return {
+      file: file.buffer.toString(),
+    };
   }
 }
