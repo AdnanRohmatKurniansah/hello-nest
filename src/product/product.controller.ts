@@ -61,7 +61,7 @@ export class ProductController {
     try {
       const products = this.productService.findAll();
       const product = products.filter((p) => {
-        return p.id === id;
+        return p.id == id;
       });
       res.json({
         message: 'Detail product',
